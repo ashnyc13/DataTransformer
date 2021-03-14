@@ -15,8 +15,10 @@ namespace DataTransformer.Core
 
         public PipelineService(IPluginService pluginService)
         {
-            _allPipelines = new List<Pipeline>();
-            _allPipelines.Add(new Pipeline { Name = "Base64+Unicode encode" });
+            _allPipelines = new List<Pipeline>
+            {
+                new Pipeline { Name = "Base64+Ascii encode" }
+            };
             _pluginService = pluginService ?? throw new ArgumentNullException(nameof(pluginService));
         }
 
