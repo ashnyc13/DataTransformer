@@ -24,7 +24,7 @@ namespace DataTransformer.Core
 
         public Task<IEnumerable<string>> GetAllPipelineNames()
         {
-            return Task.Delay(2000).ContinueWith(task => _allPipelines.Select(pipeline => pipeline.Name));
+            return Task.FromResult(_allPipelines.Select(pipeline => pipeline.Name));
         }
 
         public async Task<string> Execute(string pipelineName, string text)

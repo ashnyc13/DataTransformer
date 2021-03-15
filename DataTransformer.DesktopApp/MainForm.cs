@@ -9,9 +9,9 @@ namespace DataTransformer
     {
         private readonly IPipelineService _pipelineService;
 
-        public MainForm()
+        public MainForm(IPipelineService pipelineService)
         {
-            _pipelineService = new PipelineService(new PluginService());
+            _pipelineService = pipelineService ?? throw new ArgumentNullException(nameof(pipelineService));
             _pipelineService.Progress += PipelineService_Progress;
             InitializeComponent();
         }

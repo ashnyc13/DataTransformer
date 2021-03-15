@@ -1,3 +1,5 @@
+using DataTransformer.Core;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows.Forms;
 
@@ -14,7 +16,23 @@ namespace DataTransformer
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+
+            using (var sp = services.BuildServiceProvider())
+            {
+                var mainForm = sp.GetRequiredService<MainForm>();
+                Application.Run(mainForm);
+            }
+            
+        }
+
+        private static void ConfigureServices(ServiceCollection services)
+        {
+            services.AddSingleton<IPluginService, PluginService>();
+            services.AddSingleton<IPipelineService, PipelineService>();
+            services.AddScoped<MainForm>();
         }
     }
 }

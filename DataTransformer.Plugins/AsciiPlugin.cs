@@ -23,7 +23,7 @@ namespace DataTransformer.Plugins
         {
             if (input is not string) throw new ArgumentException($"Input must be a string", nameof(input));
             object result = Encoding.ASCII.GetBytes(input as string);
-            return Task.Delay(2000).ContinueWith(task => result);
+            return Task.Delay(1000).ContinueWith(task => result);
         }
     }
 }
