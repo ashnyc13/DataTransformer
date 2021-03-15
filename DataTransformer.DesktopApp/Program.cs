@@ -30,6 +30,7 @@ namespace DataTransformer
 
         private static void ConfigureServices(ServiceCollection services)
         {
+            services.AddSingleton<ITypeFinder, TypeFinder>();
             services.AddSingleton<IPluginService, PluginService>();
             services.AddSingleton<IPipelineService, PipelineService>();
             services.AddScoped<MainForm>();
