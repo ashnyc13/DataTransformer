@@ -32,8 +32,7 @@ namespace DataTransformer
             transferButton.BeginInvoke(new Action(async () => {
                 // execute the selected pipeline
                 var selectedPipelineName = pipelinesList.SelectedItems[0].Text;
-                var task = _pipelineService.Execute(selectedPipelineName, inputTextBox.Text);
-                var output = await task;
+                var output = await _pipelineService.Execute(selectedPipelineName, inputTextBox.Text);
                 outputTextBox.Text = output;
             }));
         }
