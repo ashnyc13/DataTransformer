@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DataTransformer.Core
+namespace DataTransformer.Core.Utility
 {
     /// <summary>
     /// Helps find concrete objects of given interface

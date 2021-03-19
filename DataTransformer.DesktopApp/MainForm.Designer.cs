@@ -88,11 +88,12 @@
             // 
             this.transferButton.BackgroundImage = global::DataTransformer.DesktopApp.Properties.Resources.upArrow;
             this.transferButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.transferButton.Location = new System.Drawing.Point(13, 227);
+            this.transferButton.Location = new System.Drawing.Point(87, 227);
             this.transferButton.Name = "transferButton";
             this.transferButton.Size = new System.Drawing.Size(65, 64);
             this.transferButton.TabIndex = 2;
             this.transferButton.UseVisualStyleBackColor = true;
+            this.transferButton.Click += new System.EventHandler(this.TransferButton_Click);
             // 
             // pipelinesGroup
             // 
@@ -120,7 +121,7 @@
             // 
             this.transformButton.BackgroundImage = global::DataTransformer.DesktopApp.Properties.Resources.downArrow;
             this.transformButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.transformButton.Location = new System.Drawing.Point(84, 227);
+            this.transformButton.Location = new System.Drawing.Point(16, 227);
             this.transformButton.Name = "transformButton";
             this.transformButton.Size = new System.Drawing.Size(65, 64);
             this.transformButton.TabIndex = 4;

@@ -1,4 +1,4 @@
-﻿using DataTransformer.Core;
+﻿using DataTransformer.Core.Services;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -41,6 +41,11 @@ namespace DataTransformer
         {
             progress.Value = e.PercentProgress;
             statusLabel.Text = e.StatusMessage;
+        }
+
+        private void TransferButton_Click(object sender, EventArgs e)
+        {
+            inputTextBox.Text = outputTextBox.Text;
         }
     }
 }

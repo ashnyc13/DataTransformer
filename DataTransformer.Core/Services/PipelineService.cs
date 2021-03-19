@@ -1,25 +1,30 @@
-﻿using DataTransformer.Models;
+﻿using DataTransformer.Core.Config;
+using DataTransformer.Core.Factories;
+using DataTransformer.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DataTransformer.Core
+namespace DataTransformer.Core.Services
 {
     public class PipelineService : IPipelineService
     {
-        private readonly List<Pipeline> _allPipelines;
-        private readonly IPluginService _pluginService;
+        private readonly List<Pipeline> _allPipelines = new();
+        private readonly IPipelineFactory _pipelineFactory;
 
         public event EventHandler<PipelineProgressEventArgs> Progress;
 
-        public PipelineService(IPluginService pluginService)
+        public PipelineService(IPipelineFactory pipelineFactory, IOptions<LibraryConfiguration> libraryConfig)
         {
-            _allPipelines = new List<Pipeline>
+            _pipelineFactory = pipelineFactory ?? throw new ArgumentNullException(nameof(pipelineFactory));
+
+            if (libraryConfig is null)
             {
-                new Pipeline { Name = "Base64+Ascii encode" }
-            };
-            _pluginService = pluginService ?? throw new ArgumentNullException(nameof(pluginService));
+                throw new ArgumentNullException(nameof(libraryConfig));
+            }
+            CreatePipelines(libraryConfig.Value);
         }
 
         public Task<IEnumerable<string>> GetAllPipelineNames()
@@ -31,12 +36,6 @@ namespace DataTransformer.Core
         {
             // get the pipeline by name
             var pipeline = _allPipelines.FirstOrDefault(pipeline => pipeline.Name == pipelineName);
-
-            // get plugins
-            if(pipeline.Plugins == null)
-            {
-                pipeline.Plugins = await _pluginService.LoadAllPlugins();
-            }
 
             // execute the plugins under the pipeline
             object inputOutput = text;
@@ -56,8 +55,8 @@ namespace DataTransformer.Core
                 inputOutput = await plugin.Encode(inputOutput);
 
                 // Update progress
-                progress = ((i + 1) * 100) / length;
-                
+                progress = (i + 1) * 100 / length;
+
                 // TODO: validate the output goes
                 // in as input in the next plugin
             }
@@ -71,6 +70,15 @@ namespace DataTransformer.Core
                 StatusMessage = $"Ready."
             });
             return inputOutput.ToString();
+        }
+
+        private void CreatePipelines(LibraryConfiguration config)
+        {
+            if (config is null) throw new ArgumentNullException(nameof(config));
+            foreach (var pipelineConfig in config.Pipelines)
+            {
+                _allPipelines.Add(_pipelineFactory.Create(pipelineConfig));
+            }
         }
     }
 }

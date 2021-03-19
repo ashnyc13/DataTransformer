@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace DataTransformer.Core
+namespace DataTransformer.Core.Utility
 {
     /// <inheritdoc />
     public class TypeFinder : ITypeFinder
