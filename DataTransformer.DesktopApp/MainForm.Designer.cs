@@ -1,4 +1,4 @@
-﻿namespace DataTransformer
+﻿namespace DataTransformer.DesktopApp
 {
     partial class MainForm
     {
@@ -38,9 +38,14 @@
             this.transformButton = new System.Windows.Forms.Button();
             this.statusLabel = new System.Windows.Forms.Label();
             this.progress = new System.Windows.Forms.ProgressBar();
+            this.managePipelines = new System.Windows.Forms.GroupBox();
+            this.removePipelineButton = new System.Windows.Forms.Button();
+            this.editPipelineButton = new System.Windows.Forms.Button();
+            this.addPipelineButton = new System.Windows.Forms.Button();
             this.inputGroupBox.SuspendLayout();
             this.outputGroupBox.SuspendLayout();
             this.pipelinesGroup.SuspendLayout();
+            this.managePipelines.SuspendLayout();
             this.SuspendLayout();
             // 
             // inputGroupBox
@@ -100,7 +105,7 @@
             this.pipelinesGroup.Controls.Add(this.pipelinesList);
             this.pipelinesGroup.Location = new System.Drawing.Point(544, 13);
             this.pipelinesGroup.Name = "pipelinesGroup";
-            this.pipelinesGroup.Size = new System.Drawing.Size(362, 439);
+            this.pipelinesGroup.Size = new System.Drawing.Size(362, 378);
             this.pipelinesGroup.TabIndex = 3;
             this.pipelinesGroup.TabStop = false;
             this.pipelinesGroup.Text = "Available pipelines";
@@ -112,7 +117,7 @@
             this.pipelinesList.Location = new System.Drawing.Point(3, 19);
             this.pipelinesList.MultiSelect = false;
             this.pipelinesList.Name = "pipelinesList";
-            this.pipelinesList.Size = new System.Drawing.Size(356, 417);
+            this.pipelinesList.Size = new System.Drawing.Size(356, 356);
             this.pipelinesList.TabIndex = 0;
             this.pipelinesList.UseCompatibleStateImageBehavior = false;
             this.pipelinesList.View = System.Windows.Forms.View.List;
@@ -141,14 +146,55 @@
             // 
             this.progress.Location = new System.Drawing.Point(544, 479);
             this.progress.Name = "progress";
-            this.progress.Size = new System.Drawing.Size(355, 23);
+            this.progress.Size = new System.Drawing.Size(359, 23);
             this.progress.TabIndex = 6;
+            // 
+            // managePipelines
+            // 
+            this.managePipelines.Controls.Add(this.removePipelineButton);
+            this.managePipelines.Controls.Add(this.editPipelineButton);
+            this.managePipelines.Controls.Add(this.addPipelineButton);
+            this.managePipelines.Location = new System.Drawing.Point(547, 398);
+            this.managePipelines.Name = "managePipelines";
+            this.managePipelines.Size = new System.Drawing.Size(356, 58);
+            this.managePipelines.TabIndex = 7;
+            this.managePipelines.TabStop = false;
+            this.managePipelines.Text = "Manage pipelines";
+            // 
+            // removePipelineButton
+            // 
+            this.removePipelineButton.Location = new System.Drawing.Point(169, 22);
+            this.removePipelineButton.Name = "removePipelineButton";
+            this.removePipelineButton.Size = new System.Drawing.Size(75, 23);
+            this.removePipelineButton.TabIndex = 2;
+            this.removePipelineButton.Text = "Remove";
+            this.removePipelineButton.UseVisualStyleBackColor = true;
+            // 
+            // editPipelineButton
+            // 
+            this.editPipelineButton.Location = new System.Drawing.Point(88, 23);
+            this.editPipelineButton.Name = "editPipelineButton";
+            this.editPipelineButton.Size = new System.Drawing.Size(75, 23);
+            this.editPipelineButton.TabIndex = 1;
+            this.editPipelineButton.Text = "Edit";
+            this.editPipelineButton.UseVisualStyleBackColor = true;
+            // 
+            // addPipelineButton
+            // 
+            this.addPipelineButton.Location = new System.Drawing.Point(7, 23);
+            this.addPipelineButton.Name = "addPipelineButton";
+            this.addPipelineButton.Size = new System.Drawing.Size(75, 23);
+            this.addPipelineButton.TabIndex = 0;
+            this.addPipelineButton.Text = "Add";
+            this.addPipelineButton.UseVisualStyleBackColor = true;
+            this.addPipelineButton.Click += new System.EventHandler(this.AddPipelineButton_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(911, 518);
+            this.Controls.Add(this.managePipelines);
             this.Controls.Add(this.progress);
             this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.transformButton);
@@ -166,6 +212,7 @@
             this.outputGroupBox.ResumeLayout(false);
             this.outputGroupBox.PerformLayout();
             this.pipelinesGroup.ResumeLayout(false);
+            this.managePipelines.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,6 +230,10 @@
         private System.Windows.Forms.Button transformButton;
         private System.Windows.Forms.Label statusLabel;
         private System.Windows.Forms.ProgressBar progress;
+        private System.Windows.Forms.GroupBox managePipelines;
+        private System.Windows.Forms.Button addPipelineButton;
+        private System.Windows.Forms.Button editPipelineButton;
+        private System.Windows.Forms.Button removePipelineButton;
     }
 }
 

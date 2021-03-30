@@ -9,11 +9,11 @@ namespace DataTransformer.Core.Factories
     /// <inheritdoc />
     public class PipelineFactory : IPipelineFactory
     {
-        private readonly IPluginLoader _pluginService;
+        private readonly IPluginLoader pluginLoader;
 
         public PipelineFactory(IPluginLoader pluginService)
         {
-            _pluginService = pluginService ?? throw new ArgumentNullException(nameof(pluginService));
+            pluginLoader = pluginService ?? throw new ArgumentNullException(nameof(pluginService));
         }
 
         /// <inheritdoc />
@@ -22,7 +22,7 @@ namespace DataTransformer.Core.Factories
             return new Pipeline
             {
                 Name = config.Name,
-                Plugins = config.Plugins.Select(pluginType => _pluginService.LoadPlugin(pluginType)).ToArray()
+                Plugins = config.Plugins.Select(pluginType => pluginLoader.LoadPlugin(pluginType)).ToArray()
             };
         }
     }

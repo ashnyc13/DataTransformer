@@ -2,12 +2,13 @@ using DataTransformer.Core.Config;
 using DataTransformer.Core.Factories;
 using DataTransformer.Core.Services;
 using DataTransformer.Core.Utility;
+using DataTransformer.DesktopApp.Factories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows.Forms;
 
-namespace DataTransformer
+namespace DataTransformer.DesktopApp
 {
     static class Program
     {
@@ -46,7 +47,9 @@ namespace DataTransformer
             services.AddSingleton<IPluginLoader, PluginLoader>();
             services.AddSingleton<IPipelineFactory, PipelineFactory>();
             services.AddSingleton<IPipelineService, PipelineService>();
+            services.AddSingleton<IPipelineDialogFactory, PipelineDialogFactory>();
             services.AddScoped<MainForm>();
+            services.AddTransient<PipelineDialog>();
         }
     }
 }

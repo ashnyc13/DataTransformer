@@ -3,33 +3,37 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace DataTransformer
+namespace DataTransformer.DesktopApp
 {
     public partial class MainForm : Form
     {
         private readonly IPipelineService _pipelineService;
+        private readonly IPipelineDialogFactory _pipelineDialogFactory;
 
-        public MainForm(IPipelineService pipelineService)
+        public MainForm(IPipelineService pipelineService, IPipelineDialogFactory pipelineDialogFactory)
         {
             _pipelineService = pipelineService ?? throw new ArgumentNullException(nameof(pipelineService));
+            _pipelineDialogFactory = pipelineDialogFactory ?? throw new ArgumentNullException(nameof(pipelineDialogFactory));
             _pipelineService.Progress += PipelineService_Progress;
             InitializeComponent();
         }
 
-        private async void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
-            // Load all pipelines
-            statusLabel.Text = "Loading all pipelines...";
-            var pipelines = await _pipelineService.GetAllPipelineNames();
-            Array.ForEach(pipelines.ToArray(),
-                pipeline => pipelinesList.Items.Add(pipeline));
-            pipelinesList.SelectedIndices.Add(0);
-            statusLabel.Text = "Ready.";
+            BeginInvoke(new Action(async () => {
+                // Load all pipelines
+                statusLabel.Text = "Loading all pipelines...";
+                var pipelines = await _pipelineService.GetAllPipelineNames();
+                Array.ForEach(pipelines.ToArray(),
+                    pipeline => pipelinesList.Items.Add(pipeline));
+                pipelinesList.SelectedIndices.Add(0);
+                statusLabel.Text = "Ready.";
+            }));
         }
 
         private void TransformButton_Click(object sender, EventArgs e)
         {
-            transferButton.BeginInvoke(new Action(async () => {
+            transformButton.BeginInvoke(new Action(async () => {
                 // execute the selected pipeline
                 var selectedPipelineName = pipelinesList.SelectedItems[0].Text;
                 var output = await _pipelineService.Execute(selectedPipelineName, inputTextBox.Text);
@@ -46,6 +50,15 @@ namespace DataTransformer
         private void TransferButton_Click(object sender, EventArgs e)
         {
             inputTextBox.Text = outputTextBox.Text;
+        }
+
+        private void AddPipelineButton_Click(object sender, EventArgs e)
+        {
+            var dialog = _pipelineDialogFactory.Create();
+            if(dialog.ShowDialog() == DialogResult.OK)
+            {
+                MessageBox.Show(this, "Save clicked");
+            }
         }
     }
 }
