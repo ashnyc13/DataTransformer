@@ -14,10 +14,5 @@ namespace DataTransformer.Models
         /// A list of plugins that make up the pipeline.
         /// </summary>
         public IPlugin[] Plugins { get; set; }
-
-        /// <summary>
-        /// Plugin metadata associated with plugin type name as key.
-        /// </summary>
-        public Dictionary<string, PluginMetadata> PluginMetadataMap { get; set; }
     }
 }

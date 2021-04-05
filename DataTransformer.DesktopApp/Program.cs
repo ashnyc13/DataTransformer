@@ -45,6 +45,7 @@ namespace DataTransformer.DesktopApp
             });
             services.AddSingleton<ITypeFinder, TypeFinder>();
             services.AddSingleton<IPluginMetadataFactory, PluginMetadataFactory>();
+            services.AddSingleton<IPluginMetadataRepository, PluginMetadataRepository>();
             services.AddSingleton<IPluginLoader, PluginLoader>();
             services.AddSingleton<IPipelineFactory, PipelineFactory>();
             services.AddSingleton<IPipelineService, PipelineService>();

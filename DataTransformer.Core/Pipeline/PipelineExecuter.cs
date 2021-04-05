@@ -1,4 +1,5 @@
-﻿using DataTransformer.Models;
+﻿using DataTransformer.Core.Plugin;
+using DataTransformer.Models;
 using System;
 using System.Threading.Tasks;
 
@@ -7,12 +8,14 @@ namespace DataTransformer.Core.Pipeline
     public class PipelineExecuter : IPipelineExecuter
     {
         private readonly IPipelineService _pipelineService;
+        private readonly IPluginMetadataRepository _pluginMetadataRepository;
 
         public event EventHandler<PipelineProgressEventArgs> Progress;
 
-        public PipelineExecuter(IPipelineService pipelineService)
+        public PipelineExecuter(IPipelineService pipelineService, IPluginMetadataRepository pluginMetadataRepository)
         {
             _pipelineService = pipelineService ?? throw new ArgumentNullException(nameof(pipelineService));
+            _pluginMetadataRepository = pluginMetadataRepository ?? throw new ArgumentNullException(nameof(pluginMetadataRepository));
         }
 
         public async Task<string> Execute(string pipelineName, string text)
@@ -35,7 +38,7 @@ namespace DataTransformer.Core.Pipeline
                 });
 
                 // Run plugin
-                inputOutput = await ExecuteEncode(pipeline, plugin, inputOutput);
+                inputOutput = await ExecuteEncode(plugin, inputOutput);
 
                 // Update progress
                 progress = (i + 1) * 100 / length;
@@ -55,9 +58,9 @@ namespace DataTransformer.Core.Pipeline
             return inputOutput.ToString();
         }
 
-        private Task<object> ExecuteEncode(Models.Pipeline pipeline, IPlugin plugin, object input)
+        private Task<object> ExecuteEncode(IPlugin plugin, object input)
         {
-            var pluginMetadata = pipeline.PluginMetadataMap[plugin.GetType().FullName];
+            var pluginMetadata = _pluginMetadataRepository.Get(plugin);
             var task = pluginMetadata.EncodeFunction.Invoke(plugin, new[] { input }) as Task;
             return task.ContinueWith(t =>
             {
