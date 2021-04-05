@@ -1,28 +1,25 @@
 ﻿using DataTransformer.Models;
-using System;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DataTransformer.Plugins
 {
-    public class AsciiPlugin : IPlugin
+    public class AsciiPlugin : IPlugin<string, byte[]>
     {
         /// <inheritdoc/>
         public string Name => "Ascii";
 
         /// <inheritdoc/>
-        public Task<object> Decode(object input)
+        public Task<string> Decode(byte[] input)
         {
-            if (input is not byte[]) throw new ArgumentException($"Input must be a byte[]", nameof(input));
-            object result = Encoding.ASCII.GetString(input as byte[]);
+            var result = Encoding.ASCII.GetString(input);
             return Task.FromResult(result);
         }
 
         /// <inheritdoc/>
-        public Task<object> Encode(object input)
+        public Task<byte[]> Encode(string input)
         {
-            if (input is not string) throw new ArgumentException($"Input must be a string", nameof(input));
-            object result = Encoding.ASCII.GetBytes(input as string);
+            var result = Encoding.ASCII.GetBytes(input);
             return Task.Delay(1000).ContinueWith(task => result);
         }
     }

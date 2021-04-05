@@ -8,19 +8,22 @@ namespace DataTransformer.Models
         /// Name of the plugin.
         /// </summary>
         string Name { get; }
+    }
 
+    public interface IPlugin<TInput, TOutput> : IPlugin
+    {
         /// <summary>
         /// Encodes the given <paramref name="input"/>.
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public Task<object> Encode(object input);
+        public Task<TOutput> Encode(TInput input);
 
         /// <summary>
-        /// Decodes the given <paramref name="input"/>.
+        /// Decodes the given <paramref name="output"/>.
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="output"></param>
         /// <returns></returns>
-        public Task<object> Decode(object input);
+        public Task<TInput> Decode(TOutput output);
     }
 }

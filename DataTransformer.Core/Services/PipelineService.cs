@@ -52,7 +52,7 @@ namespace DataTransformer.Core.Services
                 });
 
                 // Run plugin
-                inputOutput = await plugin.Encode(inputOutput);
+                inputOutput = await ExecuteEncode(pipeline, plugin, inputOutput);
 
                 // Update progress
                 progress = (i + 1) * 100 / length;
@@ -79,6 +79,16 @@ namespace DataTransformer.Core.Services
             {
                 _allPipelines.Add(_pipelineFactory.Create(pipelineConfig));
             }
+        }
+
+        private Task<object> ExecuteEncode(Pipeline pipeline, IPlugin plugin, object input)
+        {
+            var pluginMetadata = pipeline.PluginMetadataMap[plugin.GetType().FullName];
+            var task = pluginMetadata.EncodeFunction.Invoke(plugin, new[] { input }) as Task;
+            return task.ContinueWith(t => {
+                dynamic dynT = t;
+                return dynT.Result as object;
+            });
         }
     }
 }
