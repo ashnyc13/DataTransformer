@@ -4,19 +4,19 @@ using DataTransformer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace DataTransformer.Core.Pipeline
 {
     /// <inheritdoc />
     public class PipelineFactory : IPipelineFactory
     {
-        private readonly IPluginLoader pluginLoader;
-        private static readonly Type GenericPluginType = typeof(IPlugin<,>);
-
-        public PipelineFactory(IPluginLoader pluginService)
+        private readonly IPluginLoader _pluginLoader;
+        private readonly IPluginMetadataFactory _pluginMetadataFactory;
+        
+        public PipelineFactory(IPluginLoader pluginLoader, IPluginMetadataFactory pluginMetadataFactory)
         {
-            pluginLoader = pluginService ?? throw new ArgumentNullException(nameof(pluginService));
+            _pluginLoader = pluginLoader ?? throw new ArgumentNullException(nameof(pluginLoader));
+            _pluginMetadataFactory = pluginMetadataFactory ?? throw new ArgumentNullException(nameof(pluginMetadataFactory));
         }
 
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace DataTransformer.Core.Pipeline
             var pipeline = new Models.Pipeline
             {
                 Name = config.Name,
-                Plugins = config.Plugins.Select(pluginType => pluginLoader.LoadPlugin(pluginType)).ToArray()
+                Plugins = config.Plugins.Select(pluginType => _pluginLoader.LoadPlugin(pluginType)).ToArray()
             };
             pipeline.PluginMetadataMap = CreatePluginMetadataMap(pipeline.Plugins);
             return pipeline;
@@ -37,28 +37,10 @@ namespace DataTransformer.Core.Pipeline
             foreach (var plugin in plugins)
             {
                 var pluginType = plugin.GetType();
-                map.Add(pluginType.FullName, CreatePluginMetadata(pluginType));
+                map.Add(pluginType.FullName, _pluginMetadataFactory.Create(pluginType));
             }
 
             return map;
-        }
-
-        private static PluginMetadata CreatePluginMetadata(Type pluginType)
-        {
-            var interaces = pluginType.GetInterfaces();
-            if (!interaces.Any(iface => iface.IsGenericType && iface.GetGenericTypeDefinition() == GenericPluginType))
-                throw new ArgumentException($"Given plugin type '{pluginType.FullName}' doesn't implement the generic IPlugin<> interface.",
-                    nameof(pluginType));
-
-            var metadata = new PluginMetadata
-            {
-                DecodeFunction = pluginType.GetMethod("Decode", BindingFlags.Public | BindingFlags.Instance),
-                EncodeFunction = pluginType.GetMethod("Encode", BindingFlags.Public | BindingFlags.Instance)
-            };
-            metadata.InputType = metadata.EncodeFunction.GetParameters()[0].ParameterType;
-            metadata.OutputType = metadata.DecodeFunction.GetParameters()[0].ParameterType;
-
-            return metadata;
         }
     }
 }
