@@ -1,20 +1,16 @@
 ﻿using DataTransformer.Core.Config;
-using DataTransformer.Core.Factories;
-using DataTransformer.Models;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DataTransformer.Core.Services
+namespace DataTransformer.Core.Pipeline
 {
     public class PipelineService : IPipelineService
     {
-        private readonly List<Pipeline> _allPipelines = new();
+        private readonly List<Models.Pipeline> _allPipelines = new();
         private readonly IPipelineFactory _pipelineFactory;
-
-        public event EventHandler<PipelineProgressEventArgs> Progress;
 
         public PipelineService(IPipelineFactory pipelineFactory, IOptions<LibraryConfiguration> libraryConfig)
         {
@@ -32,7 +28,7 @@ namespace DataTransformer.Core.Services
             return Task.FromResult(_allPipelines.Select(pipeline => pipeline.Name));
         }
 
-        public Pipeline GetPipelineByName(string pipelineName)
+        public Models.Pipeline GetPipelineByName(string pipelineName)
         {
             return _allPipelines.FirstOrDefault(pipeline => pipeline.Name == pipelineName);
         }

@@ -1,7 +1,7 @@
 ﻿using DataTransformer.Models;
 using System.Threading.Tasks;
 
-namespace DataTransformer.Core.Services
+namespace DataTransformer.Core.Plugin
 {
     /// <summary>
     /// Helps load plugins

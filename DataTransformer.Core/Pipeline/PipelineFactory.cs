@@ -1,12 +1,12 @@
 ﻿using DataTransformer.Core.Config;
-using DataTransformer.Core.Services;
+using DataTransformer.Core.Plugin;
 using DataTransformer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace DataTransformer.Core.Factories
+namespace DataTransformer.Core.Pipeline
 {
     /// <inheritdoc />
     public class PipelineFactory : IPipelineFactory
@@ -20,9 +20,9 @@ namespace DataTransformer.Core.Factories
         }
 
         /// <inheritdoc />
-        public Pipeline Create(PipelineConfiguration config)
+        public Models.Pipeline Create(PipelineConfiguration config)
         {
-            var pipeline = new Pipeline
+            var pipeline = new Models.Pipeline
             {
                 Name = config.Name,
                 Plugins = config.Plugins.Select(pluginType => pluginLoader.LoadPlugin(pluginType)).ToArray()

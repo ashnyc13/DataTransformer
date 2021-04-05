@@ -1,6 +1,6 @@
 using DataTransformer.Core.Config;
-using DataTransformer.Core.Factories;
-using DataTransformer.Core.Services;
+using DataTransformer.Core.Pipeline;
+using DataTransformer.Core.Plugin;
 using DataTransformer.Core.Utility;
 using DataTransformer.DesktopApp.Factories;
 using Microsoft.Extensions.Configuration;

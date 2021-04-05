@@ -1,7 +1,6 @@
 ﻿using DataTransformer.Core.Config;
-using DataTransformer.Models;
 
-namespace DataTransformer.Core.Factories
+namespace DataTransformer.Core.Pipeline
 {
     /// <summary>
     /// Helps create an instance of <see cref="Pipeline"/>.
@@ -13,6 +12,6 @@ namespace DataTransformer.Core.Factories
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        Pipeline Create(PipelineConfiguration config);
+        Models.Pipeline Create(PipelineConfiguration config);
     }
 }

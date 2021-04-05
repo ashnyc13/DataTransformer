@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace DataTransformer.Core.Services
+namespace DataTransformer.Core.Plugin
 {
     /// <inheritdoc />
     public class PluginLoader : IPluginLoader

@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DataTransformer.Core.Services
+namespace DataTransformer.Core.Pipeline
 {
     public class PipelineExecuter : IPipelineExecuter
     {
@@ -55,7 +55,7 @@ namespace DataTransformer.Core.Services
             return inputOutput.ToString();
         }
 
-        private Task<object> ExecuteEncode(Pipeline pipeline, IPlugin plugin, object input)
+        private Task<object> ExecuteEncode(Models.Pipeline pipeline, IPlugin plugin, object input)
         {
             var pluginMetadata = pipeline.PluginMetadataMap[plugin.GetType().FullName];
             var task = pluginMetadata.EncodeFunction.Invoke(plugin, new[] { input }) as Task;

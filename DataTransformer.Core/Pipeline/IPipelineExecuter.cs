@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace DataTransformer.Core.Services
+namespace DataTransformer.Core.Pipeline
 {
     public interface IPipelineExecuter
     {
