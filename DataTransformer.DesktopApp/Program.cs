@@ -47,6 +47,7 @@ namespace DataTransformer.DesktopApp
             services.AddSingleton<IPluginLoader, PluginLoader>();
             services.AddSingleton<IPipelineFactory, PipelineFactory>();
             services.AddSingleton<IPipelineService, PipelineService>();
+            services.AddSingleton<IPipelineExecuter, PipelineExecuter>();
             services.AddSingleton<IPipelineDialogFactory, PipelineDialogFactory>();
             services.AddScoped<MainForm>();
             services.AddTransient<PipelineDialog>();

@@ -8,13 +8,15 @@ namespace DataTransformer.DesktopApp
     public partial class MainForm : Form
     {
         private readonly IPipelineService _pipelineService;
+        private readonly IPipelineExecuter _pipelineExecuter;
         private readonly IPipelineDialogFactory _pipelineDialogFactory;
 
-        public MainForm(IPipelineService pipelineService, IPipelineDialogFactory pipelineDialogFactory)
+        public MainForm(IPipelineService pipelineService, IPipelineExecuter pipelineExecuter, IPipelineDialogFactory pipelineDialogFactory)
         {
             _pipelineService = pipelineService ?? throw new ArgumentNullException(nameof(pipelineService));
+            _pipelineExecuter = pipelineExecuter ?? throw new ArgumentNullException(nameof(pipelineExecuter));
             _pipelineDialogFactory = pipelineDialogFactory ?? throw new ArgumentNullException(nameof(pipelineDialogFactory));
-            _pipelineService.Progress += PipelineService_Progress;
+            _pipelineExecuter.Progress += PipelineService_Progress;
             InitializeComponent();
         }
 
@@ -36,7 +38,7 @@ namespace DataTransformer.DesktopApp
             transformButton.BeginInvoke(new Action(async () => {
                 // execute the selected pipeline
                 var selectedPipelineName = pipelinesList.SelectedItems[0].Text;
-                var output = await _pipelineService.Execute(selectedPipelineName, inputTextBox.Text);
+                var output = await _pipelineExecuter.Execute(selectedPipelineName, inputTextBox.Text);
                 outputTextBox.Text = output;
             }));
         }
