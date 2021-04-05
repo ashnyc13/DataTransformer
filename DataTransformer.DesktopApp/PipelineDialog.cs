@@ -1,5 +1,7 @@
 ﻿using DataTransformer.Core.Plugin;
+using DataTransformer.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -8,6 +10,7 @@ namespace DataTransformer.DesktopApp
     public partial class PipelineDialog : Form
     {
         private readonly IPluginLoader _pluginLoader;
+        private readonly List<IPlugin> _selectedPlugins = new();
 
         public PipelineDialog(IPluginLoader pluginLoader)
         {
@@ -18,14 +21,8 @@ namespace DataTransformer.DesktopApp
         private async void PipelineDialog_Load(object sender, EventArgs e)
         {
             var allPlugins = await _pluginLoader.LoadAllPlugins();
-            foreach (var plugin in allPlugins)
-            {
-                var listViewItem = new ListViewItem(plugin.Name, "plugin")
-                {
-                    Tag = plugin
-                };
-                availablePluginsList.Items.Add(listViewItem);
-            }
+            BindPluginsToListView(allPlugins, availablePluginsList);
+            BindPluginsToListView(_selectedPlugins, pipelinePluginsList);
         }
 
         private void AddPluginsButton_Click(object sender, EventArgs e)
@@ -41,11 +38,13 @@ namespace DataTransformer.DesktopApp
                     return;
                 }
 
-                // Add those items to the right side
-                foreach (var item in selectedItems)
-                {
-                    pipelinePluginsList.Items.Add(item.Clone() as ListViewItem);
-                }
+                // Add those items to the selected list
+                _selectedPlugins.AddRange(selectedItems.Select(item => item.Tag as IPlugin));
+
+                // Validate the list
+
+                // Re-bind
+                BindPluginsToListView(_selectedPlugins, pipelinePluginsList);
             }));
         }
 
@@ -59,6 +58,19 @@ namespace DataTransformer.DesktopApp
         {
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        private static void BindPluginsToListView(IEnumerable<IPlugin> plugins, ListView listView)
+        {
+            listView.Clear();
+            foreach (var plugin in plugins)
+            {
+                var listViewItem = new ListViewItem(plugin.Name, "plugin")
+                {
+                    Tag = plugin
+                };
+                listView.Items.Add(listViewItem);
+            }
         }
     }
 }
