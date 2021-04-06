@@ -132,6 +132,7 @@ namespace DataTransformer.DesktopApp
             this.removePluginsButton.TabIndex = 5;
             this.removePluginsButton.Text = "< Remove selected Plugins";
             this.removePluginsButton.UseVisualStyleBackColor = true;
+            this.removePluginsButton.Click += new System.EventHandler(this.RemovePluginsButton_Click);
             // 
             // saveButton
             // 

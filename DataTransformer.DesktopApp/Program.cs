@@ -43,14 +43,15 @@ namespace DataTransformer.DesktopApp
             {
                 config.Bind(libraryConfig);
             });
-            services.AddSingleton<ITypeFinder, TypeFinder>();
-            services.AddSingleton<IPluginMetadataFactory, PluginMetadataFactory>();
-            services.AddSingleton<IPluginMetadataRepository, PluginMetadataRepository>();
-            services.AddSingleton<IPluginLoader, PluginLoader>();
-            services.AddSingleton<IPipelineFactory, PipelineFactory>();
-            services.AddSingleton<IPipelineService, PipelineService>();
-            services.AddSingleton<IPipelineExecuter, PipelineExecuter>();
-            services.AddSingleton<IPipelineDialogFactory, PipelineDialogFactory>();
+            services.AddScoped<ITypeFinder, TypeFinder>();
+            services.AddScoped<IPluginMetadataFactory, PluginMetadataFactory>();
+            services.AddScoped<IPluginMetadataRepository, PluginMetadataRepository>();
+            services.AddScoped<IPluginLoader, PluginLoader>();
+            services.AddScoped<IPluginListValidator, PluginListValidator>();
+            services.AddScoped<IPipelineFactory, PipelineFactory>();
+            services.AddScoped<IPipelineService, PipelineService>();
+            services.AddScoped<IPipelineExecuter, PipelineExecuter>();
+            services.AddScoped<IPipelineDialogFactory, PipelineDialogFactory>();
             services.AddScoped<MainForm>();
             services.AddTransient<PipelineDialog>();
         }
