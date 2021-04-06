@@ -7,11 +7,11 @@ namespace DataTransformer.DesktopApp
 {
     public partial class MainForm : Form
     {
-        private readonly IPipelineService _pipelineService;
+        private readonly IPipelineRepository _pipelineService;
         private readonly IPipelineExecuter _pipelineExecuter;
         private readonly IPipelineDialogFactory _pipelineDialogFactory;
 
-        public MainForm(IPipelineService pipelineService, IPipelineExecuter pipelineExecuter, IPipelineDialogFactory pipelineDialogFactory)
+        public MainForm(IPipelineRepository pipelineService, IPipelineExecuter pipelineExecuter, IPipelineDialogFactory pipelineDialogFactory)
         {
             _pipelineService = pipelineService ?? throw new ArgumentNullException(nameof(pipelineService));
             _pipelineExecuter = pipelineExecuter ?? throw new ArgumentNullException(nameof(pipelineExecuter));
@@ -36,6 +36,13 @@ namespace DataTransformer.DesktopApp
         private void TransformButton_Click(object sender, EventArgs e)
         {
             transformButton.BeginInvoke(new Action(async () => {
+                // check if any pipeline is selected
+                if (pipelinesList.SelectedItems.Count == 0)
+                {
+                    MessageBox.Show(this, "Must select a pipeline to execute.", "No pipeline selected.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 // execute the selected pipeline
                 var selectedPipelineName = pipelinesList.SelectedItems[0].Text;
                 var output = await _pipelineExecuter.Execute(selectedPipelineName, inputTextBox.Text);
@@ -59,7 +66,8 @@ namespace DataTransformer.DesktopApp
             var dialog = _pipelineDialogFactory.Create();
             if(dialog.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show(this, "Save clicked");
+                var pipeline = dialog.Tag as Models.Pipeline;
+                MessageBox.Show(this, $"Save clicked. Pipeline name: {pipeline.Name}");
             }
         }
     }

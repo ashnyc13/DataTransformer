@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace DataTransformer.Core.Pipeline
 {
-    public class PipelineService : IPipelineService
+    public class PipelineRepository : IPipelineRepository
     {
         private readonly List<Models.Pipeline> _allPipelines = new();
         private readonly IPipelineFactory _pipelineFactory;
 
-        public PipelineService(IPipelineFactory pipelineFactory, IOptions<LibraryConfiguration> libraryConfig)
+        public PipelineRepository(IPipelineFactory pipelineFactory, IOptions<LibraryConfiguration> libraryConfig)
         {
             _pipelineFactory = pipelineFactory ?? throw new ArgumentNullException(nameof(pipelineFactory));
 
@@ -31,6 +31,11 @@ namespace DataTransformer.Core.Pipeline
         public Models.Pipeline GetPipelineByName(string pipelineName)
         {
             return _allPipelines.FirstOrDefault(pipeline => pipeline.Name == pipelineName);
+        }
+
+        public void SavePipeline(Models.Pipeline pipeline)
+        {
+            throw new NotImplementedException();
         }
 
         private void CreatePipelines(LibraryConfiguration config)

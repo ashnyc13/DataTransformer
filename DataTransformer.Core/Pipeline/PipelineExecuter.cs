@@ -7,12 +7,12 @@ namespace DataTransformer.Core.Pipeline
 {
     public class PipelineExecuter : IPipelineExecuter
     {
-        private readonly IPipelineService _pipelineService;
+        private readonly IPipelineRepository _pipelineService;
         private readonly IPluginMetadataRepository _pluginMetadataRepository;
 
         public event EventHandler<PipelineProgressEventArgs> Progress;
 
-        public PipelineExecuter(IPipelineService pipelineService, IPluginMetadataRepository pluginMetadataRepository)
+        public PipelineExecuter(IPipelineRepository pipelineService, IPluginMetadataRepository pluginMetadataRepository)
         {
             _pipelineService = pipelineService ?? throw new ArgumentNullException(nameof(pipelineService));
             _pluginMetadataRepository = pluginMetadataRepository ?? throw new ArgumentNullException(nameof(pluginMetadataRepository));

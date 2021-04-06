@@ -1,6 +1,8 @@
 ﻿using DataTransformer.Core.Config;
 using DataTransformer.Core.Plugin;
+using DataTransformer.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DataTransformer.Core.Pipeline
@@ -18,12 +20,23 @@ namespace DataTransformer.Core.Pipeline
         /// <inheritdoc />
         public Models.Pipeline Create(PipelineConfiguration config)
         {
-            var pipeline = new Models.Pipeline
+            return Create(config.Name, config.Plugins.Select(pluginType => _pluginLoader.LoadPlugin(pluginType)));
+        }
+
+        /// <inheritdoc />
+        public Models.Pipeline Create(string name, IEnumerable<IPlugin> plugins)
+        {
+            return new Models.Pipeline
             {
-                Name = config.Name,
-                Plugins = config.Plugins.Select(pluginType => _pluginLoader.LoadPlugin(pluginType)).ToArray()
+                Name = name,
+                Plugins = plugins?.ToArray()
             };
-            return pipeline;
+        }
+
+        /// <inheritdoc />
+        public Models.Pipeline CreateNew()
+        {
+            return Create(null, null);
         }
     }
 }

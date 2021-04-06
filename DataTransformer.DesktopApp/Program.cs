@@ -49,8 +49,9 @@ namespace DataTransformer.DesktopApp
             services.AddScoped<IPluginLoader, PluginLoader>();
             services.AddScoped<IPluginListValidator, PluginListValidator>();
             services.AddScoped<IPipelineFactory, PipelineFactory>();
-            services.AddScoped<IPipelineService, PipelineService>();
+            services.AddScoped<IPipelineRepository, PipelineRepository>();
             services.AddScoped<IPipelineExecuter, PipelineExecuter>();
+            services.AddScoped<IPipelineValidator, PipelineValidator>();
             services.AddScoped<IPipelineDialogFactory, PipelineDialogFactory>();
             services.AddScoped<MainForm>();
             services.AddTransient<PipelineDialog>();

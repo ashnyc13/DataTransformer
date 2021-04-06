@@ -32,7 +32,7 @@ namespace DataTransformer.DesktopApp
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PipelineDialog));
             this.nameLabel = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.pipelineNameTextBox = new System.Windows.Forms.TextBox();
             this.availablePluginsGroup = new System.Windows.Forms.GroupBox();
             this.availablePluginsList = new System.Windows.Forms.ListView();
             this.pipelineDialogImageList = new System.Windows.Forms.ImageList(this.components);
@@ -55,13 +55,13 @@ namespace DataTransformer.DesktopApp
             this.nameLabel.TabIndex = 0;
             this.nameLabel.Text = "Pipeline Name";
             // 
-            // textBox1
+            // pipelineNameTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(103, 10);
-            this.textBox1.MaxLength = 100;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(685, 23);
-            this.textBox1.TabIndex = 1;
+            this.pipelineNameTextBox.Location = new System.Drawing.Point(103, 10);
+            this.pipelineNameTextBox.MaxLength = 100;
+            this.pipelineNameTextBox.Name = "pipelineNameTextBox";
+            this.pipelineNameTextBox.Size = new System.Drawing.Size(685, 23);
+            this.pipelineNameTextBox.TabIndex = 1;
             // 
             // availablePluginsGroup
             // 
@@ -166,7 +166,7 @@ namespace DataTransformer.DesktopApp
             this.Controls.Add(this.addPluginsButton);
             this.Controls.Add(this.pipelinePluginsGroup);
             this.Controls.Add(this.availablePluginsGroup);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.pipelineNameTextBox);
             this.Controls.Add(this.nameLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;
@@ -187,7 +187,7 @@ namespace DataTransformer.DesktopApp
         #endregion
 
         private System.Windows.Forms.Label nameLabel;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox pipelineNameTextBox;
         private System.Windows.Forms.GroupBox availablePluginsGroup;
         private System.Windows.Forms.GroupBox pipelinePluginsGroup;
         private System.Windows.Forms.ListView availablePluginsList;

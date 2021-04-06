@@ -1,4 +1,5 @@
-﻿using DataTransformer.Core.Plugin;
+﻿using DataTransformer.Core.Pipeline;
+using DataTransformer.Core.Plugin;
 using DataTransformer.Models;
 using System;
 using System.Collections.Generic;
@@ -10,20 +11,30 @@ namespace DataTransformer.DesktopApp
     public partial class PipelineDialog : Form
     {
         private readonly IPluginLoader _pluginLoader;
-        private readonly IPluginListValidator _pluginListValidator;
+        private readonly IPipelineValidator _pipelineValidator;
+        private readonly IPipelineFactory _pipelineFactory;
 
-        public PipelineDialog(IPluginLoader pluginLoader, IPluginListValidator pluginListValidator)
+        public PipelineDialog(IPluginLoader pluginLoader, IPipelineValidator pipelineValidator, IPipelineFactory pipelineFactory)
         {
             InitializeComponent();
             _pluginLoader = pluginLoader ?? throw new ArgumentNullException(nameof(pluginLoader));
-            _pluginListValidator = pluginListValidator ?? throw new ArgumentNullException(nameof(pluginListValidator));
+            _pipelineValidator = pipelineValidator ?? throw new ArgumentNullException(nameof(pipelineValidator));
+            _pipelineFactory = pipelineFactory ?? throw new ArgumentNullException(nameof(pipelineFactory));
         }
 
         private async void PipelineDialog_Load(object sender, EventArgs e)
         {
+            // Populate all plugins list.
             var allPlugins = await _pluginLoader.LoadAllPlugins();
             BindPluginsToListView(allPlugins, availablePluginsList);
-            //BindPluginsToListView(_selectedPlugins, pipelinePluginsList);
+
+            // Set dialog title.
+            var pipeline = Tag as Pipeline;
+            Text = Text.Replace("{Operation}", pipeline == null ? "Create" : "Edit");
+
+            // Populate pipeline plugins list.
+            if (pipeline == null) pipeline = _pipelineFactory.CreateNew();
+            BindPluginsToListView(pipeline.Plugins, pipelinePluginsList);
         }
 
         private void PipelineDialog_KeyDown(object sender, KeyEventArgs e)
@@ -72,22 +83,46 @@ namespace DataTransformer.DesktopApp
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            // Validate plugin list
-            var selectedPlugins = pipelinePluginsList.Items.Cast<ListViewItem>().Select(item => item.Tag as IPlugin);
-            var result = _pluginListValidator.Validate(selectedPlugins);
-            if (!result.IsValid)
+            saveButton.Invoke(new Action(async () =>
             {
-                MessageBox.Show(this, result.Error, "Invalid selection.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+                saveButton.Enabled = false;
 
-            DialogResult = DialogResult.OK;
-            Close();
+                // Create pipeline instance
+                var selectedPlugins = pipelinePluginsList.Items.Cast<ListViewItem>().Select(item => item.Tag as IPlugin);
+                var pipelineName = pipelineNameTextBox.Text;
+                var pipeline = _pipelineFactory.Create(pipelineName, selectedPlugins);
+
+                // Validate it
+                var result = await _pipelineValidator.Validate(pipeline);
+
+                // Show error
+                if (!result.IsValid)
+                {
+                    saveButton.Enabled = true;
+                    MessageBox.Show(this, result.Error, "Save pipeline.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // Show warning
+                if (!string.IsNullOrEmpty(result.Warning) &&
+                    MessageBox.Show(this, result.Warning, "Are you sure to proceed with saving?",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    saveButton.Enabled = true;
+                    return;
+                }
+
+                // Return it
+                Tag = pipeline;
+                DialogResult = DialogResult.OK;
+                Close();
+            }));
         }
 
         private static void BindPluginsToListView(IEnumerable<IPlugin> plugins, ListView listView)
         {
             listView.Items.Clear();
+            if (plugins == null) return;
             foreach (var plugin in plugins)
             {
                 var listViewItem = new ListViewItem(plugin.Name, "plugin")

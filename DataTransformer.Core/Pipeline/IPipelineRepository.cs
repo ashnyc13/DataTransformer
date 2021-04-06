@@ -3,9 +3,10 @@ using System.Threading.Tasks;
 
 namespace DataTransformer.Core.Pipeline
 {
-    public interface IPipelineService
+    public interface IPipelineRepository
     {
         Task<IEnumerable<string>> GetAllPipelineNames();
         public Models.Pipeline GetPipelineByName(string pipelineName);
+        void SavePipeline(Models.Pipeline pipeline);
     }
 }
