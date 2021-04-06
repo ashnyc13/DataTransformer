@@ -1,5 +1,6 @@
 ﻿using DataTransformer.Core.Pipeline;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -7,13 +8,13 @@ namespace DataTransformer.DesktopApp
 {
     public partial class MainForm : Form
     {
-        private readonly IPipelineRepository _pipelineService;
+        private readonly IPipelineRepository _pipelineRepository;
         private readonly IPipelineExecuter _pipelineExecuter;
         private readonly IPipelineDialogFactory _pipelineDialogFactory;
 
-        public MainForm(IPipelineRepository pipelineService, IPipelineExecuter pipelineExecuter, IPipelineDialogFactory pipelineDialogFactory)
+        public MainForm(IPipelineRepository pipelineRepository, IPipelineExecuter pipelineExecuter, IPipelineDialogFactory pipelineDialogFactory)
         {
-            _pipelineService = pipelineService ?? throw new ArgumentNullException(nameof(pipelineService));
+            _pipelineRepository = pipelineRepository ?? throw new ArgumentNullException(nameof(pipelineRepository));
             _pipelineExecuter = pipelineExecuter ?? throw new ArgumentNullException(nameof(pipelineExecuter));
             _pipelineDialogFactory = pipelineDialogFactory ?? throw new ArgumentNullException(nameof(pipelineDialogFactory));
             _pipelineExecuter.Progress += PipelineService_Progress;
@@ -22,20 +23,21 @@ namespace DataTransformer.DesktopApp
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            BeginInvoke(new Action(async () => {
+            BeginInvoke(new Action(async () =>
+            {
                 // Load all pipelines
                 statusLabel.Text = "Loading all pipelines...";
-                var pipelines = await _pipelineService.GetAllPipelineNames();
-                Array.ForEach(pipelines.ToArray(),
-                    pipeline => pipelinesList.Items.Add(pipeline));
-                pipelinesList.SelectedIndices.Add(0);
+                var pipelines = await _pipelineRepository.GetAllPipelineNames();
+                BindPipelinesList(pipelines);
+
                 statusLabel.Text = "Ready.";
             }));
         }
 
         private void TransformButton_Click(object sender, EventArgs e)
         {
-            transformButton.BeginInvoke(new Action(async () => {
+            transformButton.BeginInvoke(new Action(async () =>
+            {
                 // check if any pipeline is selected
                 if (pipelinesList.SelectedItems.Count == 0)
                 {
@@ -63,12 +65,27 @@ namespace DataTransformer.DesktopApp
 
         private void AddPipelineButton_Click(object sender, EventArgs e)
         {
-            var dialog = _pipelineDialogFactory.Create();
-            if(dialog.ShowDialog() == DialogResult.OK)
+            addPipelineButton.Invoke(new Action(async () =>
             {
-                var pipeline = dialog.Tag as Models.Pipeline;
-                MessageBox.Show(this, $"Save clicked. Pipeline name: {pipeline.Name}");
-            }
+                var dialog = _pipelineDialogFactory.Create();
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Save pipeline
+                    var pipeline = dialog.Tag as Models.Pipeline;
+                    await _pipelineRepository.SavePipeline(pipeline);
+
+                    // Reload list
+                    var pipelines = await _pipelineRepository.GetAllPipelineNames();
+                    BindPipelinesList(pipelines);
+                }
+            }));
+        }
+
+        private void BindPipelinesList(IEnumerable<string> pipelineNames)
+        {
+            pipelinesList.Items.Clear();
+            Array.ForEach(pipelineNames.ToArray(), pipeline => pipelinesList.Items.Add(pipeline));
+            pipelinesList.SelectedIndices.Add(0);
         }
     }
 }

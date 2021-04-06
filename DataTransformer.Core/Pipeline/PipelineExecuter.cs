@@ -21,7 +21,7 @@ namespace DataTransformer.Core.Pipeline
         public async Task<string> Execute(string pipelineName, string text)
         {
             // get the pipeline by name
-            var pipeline = _pipelineService.GetPipelineByName(pipelineName);
+            var pipeline = await _pipelineService.GetPipelineByName(pipelineName);
 
             // execute the plugins under the pipeline
             object inputOutput = text;

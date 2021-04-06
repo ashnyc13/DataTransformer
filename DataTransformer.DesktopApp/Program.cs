@@ -1,4 +1,5 @@
 using DataTransformer.Core.Config;
+using DataTransformer.Core.Data;
 using DataTransformer.Core.Pipeline;
 using DataTransformer.Core.Plugin;
 using DataTransformer.Core.Utility;
@@ -23,7 +24,7 @@ namespace DataTransformer.DesktopApp
             Application.SetCompatibleTextRenderingDefault(false);
 
             var configBuilder = new ConfigurationBuilder();
-            configBuilder.AddJsonFile("appSettings.json");
+            configBuilder.AddJsonFile("appSettings.json", optional:false, reloadOnChange:true);
             var config = configBuilder.Build();
 
             var services = new ServiceCollection();
@@ -43,6 +44,7 @@ namespace DataTransformer.DesktopApp
             {
                 config.Bind(libraryConfig);
             });
+            services.AddScoped<IConfigDbContext, ConfigDbContext>();
             services.AddScoped<ITypeFinder, TypeFinder>();
             services.AddScoped<IPluginMetadataFactory, PluginMetadataFactory>();
             services.AddScoped<IPluginMetadataRepository, PluginMetadataRepository>();

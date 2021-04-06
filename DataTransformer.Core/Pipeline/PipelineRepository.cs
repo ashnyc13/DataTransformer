@@ -1,4 +1,5 @@
 ﻿using DataTransformer.Core.Config;
+using DataTransformer.Core.Data;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -9,42 +10,50 @@ namespace DataTransformer.Core.Pipeline
 {
     public class PipelineRepository : IPipelineRepository
     {
-        private readonly List<Models.Pipeline> _allPipelines = new();
         private readonly IPipelineFactory _pipelineFactory;
+        private readonly IConfigDbContext _dbContext;
+        private readonly IOptions<LibraryConfiguration> _libraryConfig;
 
-        public PipelineRepository(IPipelineFactory pipelineFactory, IOptions<LibraryConfiguration> libraryConfig)
+        public PipelineRepository(IPipelineFactory pipelineFactory, IConfigDbContext dbContext, IOptions<LibraryConfiguration> libraryConfig)
         {
             _pipelineFactory = pipelineFactory ?? throw new ArgumentNullException(nameof(pipelineFactory));
-
-            if (libraryConfig is null)
-            {
-                throw new ArgumentNullException(nameof(libraryConfig));
-            }
-            CreatePipelines(libraryConfig.Value);
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _libraryConfig = libraryConfig ?? throw new ArgumentNullException(nameof(libraryConfig));
         }
 
         public Task<IEnumerable<string>> GetAllPipelineNames()
         {
-            return Task.FromResult(_allPipelines.Select(pipeline => pipeline.Name));
+            var pipelineNames = _libraryConfig.Value.Pipelines.Select(pipelineConfig => pipelineConfig.Name);
+            return Task.FromResult(pipelineNames);
         }
 
-        public Models.Pipeline GetPipelineByName(string pipelineName)
+        public Task<Models.Pipeline> GetPipelineByName(string pipelineName)
         {
-            return _allPipelines.FirstOrDefault(pipeline => pipeline.Name == pipelineName);
+            var pipelineConfig = _libraryConfig.Value.Pipelines.FirstOrDefault(pipelineConfig => pipelineConfig.Name == pipelineName);
+            var pipeline = _pipelineFactory.Create(pipelineConfig);
+            return Task.FromResult(pipeline);
         }
 
-        public void SavePipeline(Models.Pipeline pipeline)
+        public async Task SavePipeline(Models.Pipeline pipeline)
         {
-            throw new NotImplementedException();
-        }
+            if (pipeline is null) throw new ArgumentNullException(nameof(pipeline));
 
-        private void CreatePipelines(LibraryConfiguration config)
-        {
-            if (config is null) throw new ArgumentNullException(nameof(config));
-            foreach (var pipelineConfig in config.Pipelines)
+            // Find pipeline config by name or create new
+            var config = _libraryConfig.Value;
+            var pipelineConfig = config.Pipelines.FirstOrDefault(
+                config => config.Name.Equals(pipeline.Name, StringComparison.OrdinalIgnoreCase));
+            if (pipelineConfig == null)
             {
-                _allPipelines.Add(_pipelineFactory.Create(pipelineConfig));
+                pipelineConfig = new PipelineConfiguration();
+                config.Pipelines = config.Pipelines.Append(pipelineConfig).ToArray();
             }
+
+            // Set fields
+            pipelineConfig.Name = pipeline.Name;
+            pipelineConfig.Plugins = pipeline.Plugins.Select(plugin => plugin.GetType().AssemblyQualifiedName).ToArray();
+
+            // Save data
+            await _dbContext.Save(config);
         }
     }
 }

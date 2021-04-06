@@ -89,7 +89,7 @@ namespace DataTransformer.DesktopApp
 
                 // Create pipeline instance
                 var selectedPlugins = pipelinePluginsList.Items.Cast<ListViewItem>().Select(item => item.Tag as IPlugin);
-                var pipelineName = pipelineNameTextBox.Text;
+                var pipelineName = pipelineNameTextBox.Text.Trim();
                 var pipeline = _pipelineFactory.Create(pipelineName, selectedPlugins);
 
                 // Validate it
