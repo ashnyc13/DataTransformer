@@ -20,7 +20,7 @@ namespace DataTransformer.Plugins
         public Task<string> Encode(byte[] input)
         {
             var result = Convert.ToBase64String(input);
-            return Task.Delay(1000).ContinueWith(task => result);
+            return Task.FromResult(result);
         }
     }
 }

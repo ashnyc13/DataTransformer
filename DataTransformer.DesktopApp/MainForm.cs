@@ -44,7 +44,11 @@ namespace DataTransformer.DesktopApp
 
                 // execute the selected pipeline
                 var selectedPipelineName = selectedPipelineItem.Text;
-                var output = await _pipelineExecuter.Execute(selectedPipelineName, inputTextBox.Text);
+                var shouldExecuteInReverse = reverseCheckbox.Checked;
+                var lambda = shouldExecuteInReverse ?
+                    new Func<string, string, Task<string>>(_pipelineExecuter.ExecuteReverse) :
+                    _pipelineExecuter.Execute;
+                var output = await lambda(selectedPipelineName, inputTextBox.Text);
                 outputTextBox.Text = output;
             }));
         }

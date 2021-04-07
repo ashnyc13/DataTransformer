@@ -20,7 +20,7 @@ namespace DataTransformer.Plugins
         public Task<byte[]> Encode(string input)
         {
             var result = Encoding.ASCII.GetBytes(input);
-            return Task.Delay(1000).ContinueWith(task => result);
+            return Task.FromResult(result);
         }
     }
 }

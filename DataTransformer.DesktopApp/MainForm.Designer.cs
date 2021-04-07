@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.inputGroupBox = new System.Windows.Forms.GroupBox();
             this.inputTextBox = new System.Windows.Forms.TextBox();
             this.outputGroupBox = new System.Windows.Forms.GroupBox();
@@ -42,6 +44,8 @@
             this.removePipelineButton = new System.Windows.Forms.Button();
             this.editPipelineButton = new System.Windows.Forms.Button();
             this.addPipelineButton = new System.Windows.Forms.Button();
+            this.buttonsImageList = new System.Windows.Forms.ImageList(this.components);
+            this.reverseCheckbox = new System.Windows.Forms.CheckBox();
             this.inputGroupBox.SuspendLayout();
             this.outputGroupBox.SuspendLayout();
             this.pipelinesGroup.SuspendLayout();
@@ -91,12 +95,16 @@
             // 
             // transferButton
             // 
-            this.transferButton.BackgroundImage = global::DataTransformer.DesktopApp.Properties.Resources.upArrow;
             this.transferButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.transferButton.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.transferButton.ImageKey = "upArrow";
+            this.transferButton.ImageList = this.buttonsImageList;
             this.transferButton.Location = new System.Drawing.Point(87, 227);
             this.transferButton.Name = "transferButton";
             this.transferButton.Size = new System.Drawing.Size(65, 64);
             this.transferButton.TabIndex = 2;
+            this.transferButton.Text = "Copy to input";
+            this.transferButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.transferButton.UseVisualStyleBackColor = true;
             this.transferButton.Click += new System.EventHandler(this.TransferButton_Click);
             // 
@@ -124,12 +132,18 @@
             // 
             // transformButton
             // 
-            this.transformButton.BackgroundImage = global::DataTransformer.DesktopApp.Properties.Resources.downArrow;
             this.transformButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.transformButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.transformButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.transformButton.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.transformButton.ImageKey = "downArrow";
+            this.transformButton.ImageList = this.buttonsImageList;
             this.transformButton.Location = new System.Drawing.Point(16, 227);
             this.transformButton.Name = "transformButton";
             this.transformButton.Size = new System.Drawing.Size(65, 64);
             this.transformButton.TabIndex = 4;
+            this.transformButton.Text = "Execute Pipeline";
+            this.transformButton.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.transformButton.UseVisualStyleBackColor = true;
             this.transformButton.Click += new System.EventHandler(this.TransformButton_Click);
             // 
@@ -191,11 +205,30 @@
             this.addPipelineButton.UseVisualStyleBackColor = true;
             this.addPipelineButton.Click += new System.EventHandler(this.AddPipelineButton_Click);
             // 
+            // buttonsImageList
+            // 
+            this.buttonsImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.buttonsImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("buttonsImageList.ImageStream")));
+            this.buttonsImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.buttonsImageList.Images.SetKeyName(0, "upArrow");
+            this.buttonsImageList.Images.SetKeyName(1, "downArrow");
+            // 
+            // reverseCheckbox
+            // 
+            this.reverseCheckbox.AutoSize = true;
+            this.reverseCheckbox.Location = new System.Drawing.Point(159, 271);
+            this.reverseCheckbox.Name = "reverseCheckbox";
+            this.reverseCheckbox.Size = new System.Drawing.Size(165, 19);
+            this.reverseCheckbox.TabIndex = 8;
+            this.reverseCheckbox.Text = "Execute pipeline in reverse";
+            this.reverseCheckbox.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(911, 518);
+            this.Controls.Add(this.reverseCheckbox);
             this.Controls.Add(this.managePipelines);
             this.Controls.Add(this.progress);
             this.Controls.Add(this.statusLabel);
@@ -236,6 +269,8 @@
         private System.Windows.Forms.Button addPipelineButton;
         private System.Windows.Forms.Button editPipelineButton;
         private System.Windows.Forms.Button removePipelineButton;
+        private System.Windows.Forms.ImageList buttonsImageList;
+        private System.Windows.Forms.CheckBox reverseCheckbox;
     }
 }
 

@@ -7,6 +7,7 @@ namespace DataTransformer.Core.Pipeline
     public interface IPipelineExecuter
     {
         event EventHandler<PipelineProgressEventArgs> Progress;
-        Task<string> Execute(string pipelineName, string text);
+        Task<string> Execute(string pipelineName, string input);
+        Task<string> ExecuteReverse(string pipelineName, string input);
     }
 }
