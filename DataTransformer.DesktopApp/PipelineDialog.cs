@@ -35,12 +35,12 @@ namespace DataTransformer.DesktopApp
             var pipeline = Tag as Pipeline;
             Text = Text.Replace("{Operation}", pipeline == null ? "Create" : "Edit");
 
-            // Set the pipeline name
-            pipelineNameTextBox.Text = pipeline.Name;
-
             // Populate pipeline plugins list.
             if (pipeline == null) pipeline = _pipelineFactory.CreateNew();
             BindPluginsToListView(pipeline.Plugins, pipelinePluginsList);
+
+            // Set the pipeline name
+            pipelineNameTextBox.Text = pipeline.Name;
         }
 
         private void PipelineDialog_KeyDown(object sender, KeyEventArgs e)

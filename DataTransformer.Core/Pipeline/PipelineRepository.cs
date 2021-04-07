@@ -55,5 +55,20 @@ namespace DataTransformer.Core.Pipeline
             // Save data
             await _dbContext.Save(config);
         }
+
+        public async Task DeletePipeline(string pipelineName)
+        {
+            if (string.IsNullOrEmpty(pipelineName))
+                throw new ArgumentException($"'{nameof(pipelineName)}' cannot be null or empty.", nameof(pipelineName));
+
+            // Remove pipeline config by name
+            var config = _libraryConfig.Value;
+            var pipelines = config.Pipelines.Where(
+                pipelineConfig => !pipelineConfig.Name.Equals(pipelineName, StringComparison.OrdinalIgnoreCase)).ToArray();
+            config.Pipelines = pipelines;
+
+            // Save data
+            await _dbContext.Save(config);
+        }
     }
 }

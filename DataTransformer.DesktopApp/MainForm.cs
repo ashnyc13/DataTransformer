@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DataTransformer.DesktopApp
@@ -68,11 +69,7 @@ namespace DataTransformer.DesktopApp
                 {
                     // Save pipeline
                     var pipeline = dialog.Tag as Models.Pipeline;
-                    await _pipelineRepository.SavePipeline(pipeline);
-
-                    // Reload list
-                    var pipelines = await _pipelineRepository.GetAllPipelineNames();
-                    BindPipelinesList(pipelines);
+                    await DoPipelineOperation(repo => repo.SavePipeline(pipeline));
                 }
             }));
         }
@@ -92,12 +89,21 @@ namespace DataTransformer.DesktopApp
                 {
                     // Save pipeline
                     pipeline = dialog.Tag as Models.Pipeline;
-                    await _pipelineRepository.SavePipeline(pipeline);
-
-                    // Reload list
-                    var pipelines = await _pipelineRepository.GetAllPipelineNames();
-                    BindPipelinesList(pipelines);
+                    await DoPipelineOperation(repo => repo.SavePipeline(pipeline));
                 }
+            }));
+        }
+
+        private void RemovePipelineButton_Click(object sender, EventArgs e)
+        {
+            removePipelineButton.Invoke(new Action(async () => {
+                // Get selected pipeline
+                var selectedPipelineItem = GetSelectedPipelineItem();
+                if (selectedPipelineItem == null) return;
+
+                // Remove pipeline
+                var pipelineName = selectedPipelineItem.Text;
+                await DoPipelineOperation(repo => repo.DeletePipeline(pipelineName));
             }));
         }
 
@@ -105,7 +111,7 @@ namespace DataTransformer.DesktopApp
         {
             pipelinesList.Items.Clear();
             Array.ForEach(pipelineNames.ToArray(), pipeline => pipelinesList.Items.Add(pipeline));
-            pipelinesList.SelectedIndices.Add(0);
+            if(pipelinesList.Items.Count > 0) pipelinesList.SelectedIndices.Add(0);
         }
 
         private ListViewItem GetSelectedPipelineItem()
@@ -113,10 +119,20 @@ namespace DataTransformer.DesktopApp
             // check if any pipeline is selected
             if (pipelinesList.SelectedItems.Count == 0)
             {
-                MessageBox.Show(this, "Must select a pipeline to execute.", "No pipeline selected.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, "Must select a pipeline.", "No pipeline selected.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return null;
             }
             return pipelinesList.SelectedItems[0];
+        }
+
+        private async Task DoPipelineOperation(Func<IPipelineRepository, Task> operation)
+        {
+            // Save/Delete pipeline
+            await operation(_pipelineRepository);
+
+            // Reload list
+            var pipelines = await _pipelineRepository.GetAllPipelineNames();
+            BindPipelinesList(pipelines);
         }
     }
 }

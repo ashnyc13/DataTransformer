@@ -169,6 +169,7 @@
             this.removePipelineButton.TabIndex = 2;
             this.removePipelineButton.Text = "Remove";
             this.removePipelineButton.UseVisualStyleBackColor = true;
+            this.removePipelineButton.Click += new System.EventHandler(this.RemovePipelineButton_Click);
             // 
             // editPipelineButton
             // 

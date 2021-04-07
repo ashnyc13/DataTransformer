@@ -8,5 +8,6 @@ namespace DataTransformer.Core.Pipeline
         Task<IEnumerable<string>> GetAllPipelineNames();
         public Task<Models.Pipeline> GetPipelineByName(string pipelineName);
         Task SavePipeline(Models.Pipeline pipeline);
+        Task DeletePipeline(string pipelineName);
     }
 }
