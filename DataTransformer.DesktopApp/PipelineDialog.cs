@@ -13,13 +13,16 @@ namespace DataTransformer.DesktopApp
         private readonly IPluginLoader _pluginLoader;
         private readonly IPipelineValidator _pipelineValidator;
         private readonly IPipelineFactory _pipelineFactory;
+        private readonly IPluginMetadataRepository _pluginMetadataRepository;
 
-        public PipelineDialog(IPluginLoader pluginLoader, IPipelineValidator pipelineValidator, IPipelineFactory pipelineFactory)
+        public PipelineDialog(IPluginLoader pluginLoader, IPipelineValidator pipelineValidator,
+            IPipelineFactory pipelineFactory, IPluginMetadataRepository pluginMetadataRepository)
         {
             InitializeComponent();
             _pluginLoader = pluginLoader ?? throw new ArgumentNullException(nameof(pluginLoader));
             _pipelineValidator = pipelineValidator ?? throw new ArgumentNullException(nameof(pipelineValidator));
             _pipelineFactory = pipelineFactory ?? throw new ArgumentNullException(nameof(pipelineFactory));
+            _pluginMetadataRepository = pluginMetadataRepository ?? throw new ArgumentNullException(nameof(pluginMetadataRepository));
         }
 
         private async void PipelineDialog_Load(object sender, EventArgs e)
@@ -31,6 +34,9 @@ namespace DataTransformer.DesktopApp
             // Set dialog title.
             var pipeline = Tag as Pipeline;
             Text = Text.Replace("{Operation}", pipeline == null ? "Create" : "Edit");
+
+            // Set the pipeline name
+            pipelineNameTextBox.Text = pipeline.Name;
 
             // Populate pipeline plugins list.
             if (pipeline == null) pipeline = _pipelineFactory.CreateNew();
@@ -119,13 +125,15 @@ namespace DataTransformer.DesktopApp
             }));
         }
 
-        private static void BindPluginsToListView(IEnumerable<IPlugin> plugins, ListView listView)
+        private void BindPluginsToListView(IEnumerable<IPlugin> plugins, ListView listView)
         {
             listView.Items.Clear();
             if (plugins == null) return;
             foreach (var plugin in plugins)
             {
-                var listViewItem = new ListViewItem(plugin.Name, "plugin")
+                var metadata = _pluginMetadataRepository.Get(plugin);
+                var listViewItem = new ListViewItem(new[] { plugin.Name, metadata.InputType.Name, metadata.OutputType.Name },
+                    "plugin")
                 {
                     Tag = plugin
                 };

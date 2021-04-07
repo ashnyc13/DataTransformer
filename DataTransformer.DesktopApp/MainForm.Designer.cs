@@ -178,6 +178,7 @@
             this.editPipelineButton.TabIndex = 1;
             this.editPipelineButton.Text = "Edit";
             this.editPipelineButton.UseVisualStyleBackColor = true;
+            this.editPipelineButton.Click += new System.EventHandler(this.EditPipelineButton_Click);
             // 
             // addPipelineButton
             // 

@@ -38,15 +38,11 @@ namespace DataTransformer.DesktopApp
         {
             transformButton.BeginInvoke(new Action(async () =>
             {
-                // check if any pipeline is selected
-                if (pipelinesList.SelectedItems.Count == 0)
-                {
-                    MessageBox.Show(this, "Must select a pipeline to execute.", "No pipeline selected.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                var selectedPipelineItem = GetSelectedPipelineItem();
+                if (selectedPipelineItem == null) return;
 
                 // execute the selected pipeline
-                var selectedPipelineName = pipelinesList.SelectedItems[0].Text;
+                var selectedPipelineName = selectedPipelineItem.Text;
                 var output = await _pipelineExecuter.Execute(selectedPipelineName, inputTextBox.Text);
                 outputTextBox.Text = output;
             }));
@@ -81,11 +77,46 @@ namespace DataTransformer.DesktopApp
             }));
         }
 
+        private void EditPipelineButton_Click(object sender, EventArgs e)
+        {
+            editPipelineButton.Invoke(new Action(async () => {
+                // Get selected pipeline
+                var selectedPipelineItem = GetSelectedPipelineItem();
+                if (selectedPipelineItem == null) return;
+
+                // Show dialog to edit it
+                var pipeline = await _pipelineRepository.GetPipelineByName(selectedPipelineItem.Text);
+                var dialog = _pipelineDialogFactory.Create();
+                dialog.Tag = pipeline;
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Save pipeline
+                    pipeline = dialog.Tag as Models.Pipeline;
+                    await _pipelineRepository.SavePipeline(pipeline);
+
+                    // Reload list
+                    var pipelines = await _pipelineRepository.GetAllPipelineNames();
+                    BindPipelinesList(pipelines);
+                }
+            }));
+        }
+
         private void BindPipelinesList(IEnumerable<string> pipelineNames)
         {
             pipelinesList.Items.Clear();
             Array.ForEach(pipelineNames.ToArray(), pipeline => pipelinesList.Items.Add(pipeline));
             pipelinesList.SelectedIndices.Add(0);
+        }
+
+        private ListViewItem GetSelectedPipelineItem()
+        {
+            // check if any pipeline is selected
+            if (pipelinesList.SelectedItems.Count == 0)
+            {
+                MessageBox.Show(this, "Must select a pipeline to execute.", "No pipeline selected.", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
+            return pipelinesList.SelectedItems[0];
         }
     }
 }
