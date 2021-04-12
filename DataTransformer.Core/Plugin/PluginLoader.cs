@@ -12,16 +12,18 @@ namespace DataTransformer.Core.Plugin
     public class PluginLoader : IPluginLoader
     {
         private readonly ITypeFinder _typeFinder;
+        private readonly IPathUtility _pathUtility;
 
-        public PluginLoader(ITypeFinder typeFinder)
+        public PluginLoader(ITypeFinder typeFinder, IPathUtility pathUtility)
         {
             _typeFinder = typeFinder ?? throw new System.ArgumentNullException(nameof(typeFinder));
+            _pathUtility = pathUtility ?? throw new ArgumentNullException(nameof(pathUtility));
         }
 
         /// <inheritdoc />
         public Task<IPlugin[]> LoadAllPlugins()
         {
-            var pluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var pluginPath = _pathUtility.GetExecutionDirectory();
             var allPlugins = _typeFinder.FindAndCreateInstances<IPlugin>(pluginPath).ToArray();
             return Task.FromResult(allPlugins);
         }

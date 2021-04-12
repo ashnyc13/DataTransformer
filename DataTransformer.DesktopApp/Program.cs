@@ -46,6 +46,7 @@ namespace DataTransformer.DesktopApp
             });
             services.AddScoped<IConfigDbContext, ConfigDbContext>();
             services.AddScoped<ITypeFinder, TypeFinder>();
+            services.AddScoped<IPathUtility, PathUtility>();
             services.AddScoped<IPluginMetadataFactory, PluginMetadataFactory>();
             services.AddScoped<IPluginMetadataRepository, PluginMetadataRepository>();
             services.AddScoped<IPluginLoader, PluginLoader>();
