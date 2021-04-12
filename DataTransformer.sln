@@ -11,6 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransformer.Models", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataTransformer.Plugins", "DataTransformer.Plugins\DataTransformer.Plugins.csproj", "{356968BB-FD70-481C-8534-AE397138B747}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{775EFCFA-0088-4102-962E-548ABBA2DB23}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Specs", "Specs", "{13772163-E4A7-4641-B2CF-49E6F88723E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{50908D0E-27EA-41DF-BFFB-9F5AC511A064}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +42,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{50544178-D8CC-4D6C-81B0-625026E2975A} = {775EFCFA-0088-4102-962E-548ABBA2DB23}
+		{B3EF0965-2C03-41E7-B04C-EA3398694401} = {50908D0E-27EA-41DF-BFFB-9F5AC511A064}
+		{ED650DC4-5698-4E5D-8448-DD9E10512960} = {50908D0E-27EA-41DF-BFFB-9F5AC511A064}
+		{356968BB-FD70-481C-8534-AE397138B747} = {50908D0E-27EA-41DF-BFFB-9F5AC511A064}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B40B5897-8A7D-4677-8648-6DEF9F5306AA}
