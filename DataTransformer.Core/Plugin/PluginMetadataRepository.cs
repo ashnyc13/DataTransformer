@@ -9,13 +9,20 @@ namespace DataTransformer.Core.Plugin
         /// <summary>
         /// Plugin metadata associated with plugin type name as key.
         /// </summary>
-        private readonly Dictionary<string, PluginMetadata> _pluginMetadataMap = new();
+        private readonly IDictionary<string, PluginMetadata> _pluginMetadataMap;
 
         private readonly IPluginMetadataFactory _pluginMetadataFactory;
 
-        public PluginMetadataRepository(IPluginMetadataFactory pluginMetadataFactory)
+        public PluginMetadataRepository(IPluginMetadataFactory pluginMetadataFactory) :
+            this(pluginMetadataFactory, new Dictionary<string, PluginMetadata>())
+        {
+        }
+
+        internal protected PluginMetadataRepository(IPluginMetadataFactory pluginMetadataFactory,
+            IDictionary<string, PluginMetadata> pluginMetadataMap)
         {
             _pluginMetadataFactory = pluginMetadataFactory ?? throw new ArgumentNullException(nameof(pluginMetadataFactory));
+            _pluginMetadataMap = pluginMetadataMap ?? throw new ArgumentNullException(nameof(pluginMetadataMap));
         }
 
         public PluginMetadata Get(IPlugin plugin)
