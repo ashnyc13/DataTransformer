@@ -7,15 +7,22 @@
       :options="allPipelines"
     ></b-form-select>
     <p></p>
-    <PipelineExecuter
-      :selectedPipeline="selectedPipeline"
-      v-if="selectedPipeline"
-    />
+    <b-container v-if="selectedPipeline">
+      <b-row>
+        <b-col md="8" cols="12">
+          <PipelineExecuter :selectedPipeline="selectedPipeline" />
+        </b-col>
+        <b-col md="4" cols="12">
+          <PipelineManagerPanel :selectedPipeline="selectedPipeline" />
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
 <script>
 import PipelineExecuter from "@/components/PipelineExecuter";
+import PipelineManagerPanel from "@/components/PipelineManagerPanel";
 
 export default {
   name: "Home",
@@ -30,6 +37,7 @@ export default {
   },
   components: {
     PipelineExecuter,
+    PipelineManagerPanel,
   },
 };
 </script>

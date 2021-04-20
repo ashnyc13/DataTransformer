@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h4>Execute selected pipeline</h4>
     <b-form-textarea
       id="inputTextArea"
       v-model="input"
@@ -12,6 +13,10 @@
       <b-button @click="executeSelectedPipeline">Execute Pipeline</b-button>
       |
       <b-button @click="copyOutputToInput">Copy to input</b-button>
+      |
+      <b-form-checkbox inline v-model="isInReverse"
+        >Execute pipeline in reverse</b-form-checkbox
+      >
     </p>
 
     <b-form-textarea
@@ -31,6 +36,7 @@ export default {
     return {
       input: "",
       output: "",
+      isInReverse: false,
     };
   },
   methods: {
