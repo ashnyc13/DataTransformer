@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="pipeline-executer-container">
     <h4>Execute selected pipeline</h4>
     <b-form-textarea
       id="inputTextArea"

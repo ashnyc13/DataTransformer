@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="pipeline-manager-container">
     <h4>Manage selected pipeline</h4>
     <b-container>
       <b-row>

@@ -1,5 +1,5 @@
 <template>
-  <div class="home-view-container">
+  <div id="home-view-container">
     <h1>Data Transformer</h1>
 
     <b-form-select
