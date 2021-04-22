@@ -23,21 +23,24 @@
 <script>
 import PipelineExecuter from "@/components/PipelineExecuter";
 import PipelineManagerPanel from "@/components/PipelineManagerPanel";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Home",
   data() {
     return {
       selectedPipeline: null,
-      allPipelines: [
-        { value: null, text: "Please select a pipeline" },
-        { value: "Ascii + Base64", text: "Ascii + Base64" },
-      ],
     };
   },
   components: {
     PipelineExecuter,
     PipelineManagerPanel,
+  },
+  computed: {
+    ...mapGetters(["getAllPipelinesDropdownValues"]),
+    allPipelines() {
+      return this.getAllPipelinesDropdownValues;
+    },
   },
 };
 </script>
