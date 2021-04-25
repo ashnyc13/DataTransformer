@@ -20,16 +20,16 @@
     <b-row>
       <b-col cols="6">
         <h4>Available plugins</h4>
-        <b-list-group id="availablePluginsList" v-if="availablePlugins">
+        <b-list-group id="availablePluginsList" v-if="getAllPlugins.length">
           <b-list-group-item
             button
-            v-for="plugin in availablePlugins"
+            v-for="plugin in getAllPlugins"
             :key="plugin.id"
             @click="availablePluginListItemClicked(plugin)"
             >{{ plugin.name }} &gt;&gt;
           </b-list-group-item>
         </b-list-group>
-        <b-alert variant="danger" :show="!availablePlugins.length">
+        <b-alert variant="danger" :show="!getAllPlugins.length">
           No plugins available
         </b-alert>
       </b-col>
@@ -51,7 +51,7 @@
     </b-row>
     <b-row>
       <b-col align-self="center">
-        <b-button variant="primary" @click.prevent="savePipeline()"
+        <b-button variant="primary" @click.prevent="saveButtonClicked()"
           >Save</b-button
         >&nbsp;
         <b-button variant="secondary" @click.prevent="goBackToPreviousPage()"
@@ -64,38 +64,38 @@
 
 <script>
 import _ from "lodash";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   data() {
     return {
       pipelineName: "",
-      availablePlugins: [
-        { id: 1, name: "Ascii" },
-        { id: 2, name: "Unicode" },
-        { id: 3, name: "Base 64" },
-        { id: 4, name: "UrlEncode" },
-      ],
-      selectedPlugins: [],
+      selectedPlugins: []
     };
   },
   computed: {
+    ...mapGetters(["getAllPlugins"]),
     op() {
       return _.capitalize(this.$route.params.operation);
-    },
+    }
   },
   methods: {
+    ...mapActions(["savePipeline"]),
     availablePluginListItemClicked(plugin) {
       var pluginCopy = { ...plugin };
       this.selectedPlugins.push(pluginCopy);
     },
-    savePipeline() {
-      // TODO: Save pipeline
+    saveButtonClicked() {
+      this.savePipeline({
+        name: this.pipelineName,
+        plugins: this.selectedPlugins
+      });
 
       this.goBackToPreviousPage();
     },
     goBackToPreviousPage() {
       this.$router.go(-1);
-    },
-  },
+    }
+  }
 };
 </script>
